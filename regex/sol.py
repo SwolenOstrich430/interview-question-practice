@@ -1,69 +1,43 @@
 class Solution:
     def isMatch(self, s: str, p: str) -> bool:
-        str_idx = 0
-        reg_idx = 0
+        return self.match_helper(0, p, 0, s)
 
-        while str_idx < len(s):
-            if reg_idx >= len(p):
-                return False
-            elif not self.is_special_char(reg_idx, p) and s[str_idx] == p[reg_idx]:
-                str_idx += 1
-            elif not self.is_special_char(reg_idx, p) and s[str_idx] != p[reg_idx]:
-                return False
-            elif self.is_plain_wildcard_char(reg_idx, p):
-                str_idx += 1
-            elif self.is_look_behind_char(reg_idx, p):
-                str_idx = self.advance_index_for_look_behind_char(
-                    reg_idx, p, str_idx, s
-                )
+    def match_helper(self, reg_idx, p, str_idx, s):
+        if reg_idx == len(p) and str_idx == len(s):
+            return True
 
-                if str_idx == -1:
-                    return False
-
-            reg_idx += 1
-                
-        return True
-
-    def advance_index_for_look_behind_char(self, reg_idx, p, str_idx, s):
-        assert self.is_look_behind_char(reg_idx, p)
-        assert reg_idx != 0
-
-        if self.is_look_behind_char(reg_idx - 1, p):
-            return str_idx
-
-        if not self.is_special_char(reg_idx - 1, p):
-            while str_idx < len(s) and p[reg_idx - 1] == s[str_idx]:
-                str_idx += 1
-        elif self.is_wildcard_char(reg_idx - 1, p) and reg_idx == len(p) - 1:
-            str_idx = len(s)
-        elif self.is_wildcard_char(reg_idx - 1, p):
-            future_idx = s[str_idx:].find(p[reg_idx + 1])
-
-            if future_idx == -1:
-                str_idx = future_idx
-            else:
-                str_idx += future_idx
-
-        return str_idx
+        if reg_idx >= len(p):
+            return False
             
-    def is_plain_wildcard_char(self, reg_idx, p):
-        if reg_idx == len(p) - 1:
-            return self.is_wildcard_char(reg_idx, p)
+        curr_reg_char = p[reg_idx]
+        is_lookbehind_star = reg_idx > 0 and p[reg_idx - 1] == "*"
+
+        if is_lookbehind_star:
+            # try with 0 matches 
+            if self.match_helper(reg_idx + 1, p, str_idx, s):
+                return True
+            # try with 1+ matches         
+            while str_idx < len(s) and (s[str_idx] == p[reg_idx - 1] or p[reg_idx - 1] == "."):
+                if self.match_helper(reg_idx + 1, p, str_idx + 1, s):
+                    return True 
+
+                str_idx += 1
+
+            return False
         else:
-            return self.is_wildcard_char(reg_idx, p) and \
-                not self.is_look_behind_char(reg_idx + 1, p)
+            if p[reg_idx] == "." or s[str_idx] == p[reg_idx]:
+                return self.match_helper(reg_idx + 1, p, str_idx + 1, s)
+            elif str_idx < len(s) - 1 and reg_idx + 1 < len(p) and p[reg_idx + 1] == "*":
+                return self.match_helper(reg_idx + 1, p, str_idx, s)
 
-    def is_special_char(self, i, p):
-        return False if i >= len(p) else self.is_wildcard_char(i, p) or self.is_look_behind_char(i, p)
-
-    def is_wildcard_char(self, i, p):
-        return False if i >= len(p) else p[i] == '.'
-
-    def is_look_behind_char(self, i, p):
-        return False if i >= len(p) else p[i] == '*'
-
+            return False
 
 sol = Solution()
+# assert not sol.isMatch("mississippi", "mis*is*p*.")
+# assert sol.isMatch("aaa", "a*a")
+# assert sol.isMatch("aaa", "aaaa")
+assert not sol.isMatch("ab", ".*c")
+assert sol.isMatch("aab", "c*a*b")
 assert not sol.isMatch("aa", "a")
 assert sol.isMatch("aa", "aa")
 assert sol.isMatch("aa", "a*")
