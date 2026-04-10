@@ -1,14 +1,5 @@
 class Solution(object):
     def intToRoman(self, num):
-        """
-            * starting from the ones place and moving forward in tens place
-            * if val is: 
-                - 0: skip
-                - 4: get 1-value|5-value
-                - 5: get 5-value
-                - 9: get 1-value|10-value
-                - else: get num*1-value
-        """
         dup_num = int(num)
         converted_num = "" 
         curr_power = 0
@@ -39,12 +30,12 @@ class Solution(object):
                 curr_char = self.get_roman_numeral(1, curr_power)
                 converted_num = curr_char + converted_num
             elif curr_num > 5 and curr_num < 9:
+                curr_char = self.get_roman_numeral(1, curr_power)
+                converted_num = (curr_char * (int(curr_num) - int(5))) + converted_num
+
                 curr_char = self.get_roman_numeral(5, curr_power)
                 converted_num = curr_char + converted_num
 
-                curr_char = self.get_roman_numeral(1, curr_power)
-                converted_num = (curr_char * (int(curr_num) - int(5))) + converted_num
-                
             dup_num = int(dup_num) / int(10)
             curr_power += 1
 
@@ -71,6 +62,3 @@ class Solution(object):
             1000: "M"
         }
         
-
-sol = Solution()
-sol.intToRoman(10)
