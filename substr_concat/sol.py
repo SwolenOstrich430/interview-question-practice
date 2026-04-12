@@ -19,6 +19,9 @@ class Solution:
         if i >= len(words): 
             i = 0 
         
+        if len(curr_word) > 0 and curr_word not in s: 
+            return 
+        
         if len(words) == 0:
             if curr_word in s and s.index(curr_word) not in self.combos:
                 curr_index = s.index(curr_word)
