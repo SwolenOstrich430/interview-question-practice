@@ -2,8 +2,13 @@ from typing import List
 
 class Solution:
     def countAndSay(self, n: int) -> str:
+        if not hasattr(self, "mem"): 
+            self.mem = {}
+
         if n <= 0: 
             return ""
+        elif n in self.mem:
+            return self.mem[n]
 
         curr_count = 0
         curr_word = "1"
@@ -24,6 +29,10 @@ class Solution:
 
 
             curr_word = new_word 
+
+            if n not in self.mem:
+                self.mem[n] = curr_word
+
             new_word = "" 
             curr_count = 0
             curr_num = None
