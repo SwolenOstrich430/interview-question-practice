@@ -17,6 +17,7 @@ class Solution:
                 pending_completes.append(i)
 
         curr_index = 0
+        complete_ranges.sort()
         while curr_index < len(complete_ranges) - 1:
 
             if curr_range > 0 and complete_ranges[curr_index] - 1 != complete_ranges[curr_index - 1]:
@@ -34,7 +35,6 @@ class Solution:
 
         return curr_max
 
-            
           
             
 
