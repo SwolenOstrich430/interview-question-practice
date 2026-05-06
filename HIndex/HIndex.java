@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 class Solution {
     public int hIndex(int[] citations) {
         if (citations.length == 0) {
@@ -5,12 +7,7 @@ class Solution {
         } else if (citations.length == 1) {
             return Math.min(citations[0], 1);
         }
-        // sort the array 
-        // loop through the array
-        // check if citations[i] >= citations.length - i + 1
-        // if yes, set new max
-        // if max is set and that doesn't happen, return 0
-        // 0, 1, 3, 5, 6   
+
         Arrays.sort(citations);
         int currMax = 0;
         int citationsAboveZero = 0;
