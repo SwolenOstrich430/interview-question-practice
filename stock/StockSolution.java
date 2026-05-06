@@ -22,7 +22,9 @@ class StockSolution1 {
 
             if (buyPrice == -1 && lagPrice < leadPrice) {
                 buyPrice = lagPrice;
-            } else if (buyPrice != -1 && lagPrice > leadPrice) {
+            } 
+            
+            if (buyPrice != -1 && lagPrice > leadPrice) {
                 totalEarnings += (lagPrice - buyPrice);
                 buyPrice = -1;
             } else if (buyPrice != -1 && idx == prices.length - 1 && leadPrice > buyPrice) {
@@ -41,7 +43,7 @@ class StockSolution1 {
 class StockSolution {
     public static void main(String[] args) {
         StockSolution1 sol = new StockSolution1();
-        int[] prices = {1,2,3,4,5};
+        int[] prices = {1,2};
         System.out.println(sol.maxProfit(prices));
     }
 }
